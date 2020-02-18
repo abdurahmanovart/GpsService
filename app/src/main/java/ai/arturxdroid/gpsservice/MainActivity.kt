@@ -29,6 +29,8 @@ class MainActivity : AppCompatActivity() {
             getGpsPermission()
         else
             initButton()
+
+        GpsLocationListener.SetUpLocationListener(this)
     }
 
     private fun getGpsPermission() {
@@ -49,7 +51,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initButton() {
-        button.isChecked = !(viewModel.isServiceRunning.value ?: false)
+        button.isChecked = (viewModel.isServiceRunning.value ?: false)
 
         button.setOnClickListener {
             if (button.isChecked) {

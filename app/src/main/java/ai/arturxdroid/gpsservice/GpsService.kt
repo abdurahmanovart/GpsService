@@ -9,7 +9,12 @@ import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import kotlinx.coroutines.*
-import kotlin.coroutines.CoroutineContext
+import androidx.core.content.ContextCompat.getSystemService
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
+
 
 class GpsService : Service() {
 
@@ -35,10 +40,29 @@ class GpsService : Service() {
             .build()
 
         startForeground(1, notification)
-        val tracker =
+
+        scope.launch {
+            while (true) {
+                val simpleDateFormat = SimpleDateFormat("dd-MM-yyyy-hh-mm-ss", Locale.getDefault())
+                val ts = simpleDateFormat.format(Date())
+                val location = GpsLocationListener.lastKnownLocation
+                coordinates.add(
+                    CoordinatesData(
+                        ts,
+                        location?.latitude.toString(),
+                        location?.longitude.toString()
+                    )
+                )
+                if (coordinates.size >= 60) {
+                    api.postData(GpsData(coordinates.size, coordinates))
+                }
+                delay(1000*60)
+            }
+        }
 
         return Service.START_STICKY
     }
+
 
     private fun createNotifiacationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

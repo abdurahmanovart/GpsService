@@ -15,7 +15,7 @@ public interface GpsApI {
 
 object ApiFactory {
 
-    private const val BASE_URL = "https://localhost/"
+    private const val BASE_URL = "https://localhost:1111/"
 
     private lateinit var retrofit: GpsApI
 

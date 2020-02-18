@@ -8,10 +8,10 @@ import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
 
-internal class MyLocationListener : LocationListener {
+internal class GpsLocationListener : LocationListener {
 
     override fun onLocationChanged(loc: Location) {
-        imHere = loc
+        lastKnownLocation = loc
     }
 
     override fun onProviderDisabled(provider: String) {}
@@ -20,15 +20,15 @@ internal class MyLocationListener : LocationListener {
 
     companion object {
 
-        var imHere: Location? =
-            null // здесь будет всегда доступна самая последняя информация о местоположении пользователя.
+        var lastKnownLocation: Location? =
+            null
 
-        fun SetUpLocationListener(context: Context) // это нужно запустить в самом начале работы программы
+        fun SetUpLocationListener(context: Context)
         {
             val locationManager =
                 context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
-            val locationListener = MyLocationListener()
+            val locationListener = GpsLocationListener()
 
             if (locationManager != null) {
                 if (context.checkPermission(
@@ -48,7 +48,7 @@ internal class MyLocationListener : LocationListener {
                 )
             }
 
-            imHere = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+            lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
         }
     }
 }
