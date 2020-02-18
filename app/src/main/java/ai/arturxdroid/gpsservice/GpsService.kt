@@ -35,7 +35,7 @@ class GpsService : Service() {
             .build()
 
         startForeground(1, notification)
-
+        val tracker =
 
         return Service.START_STICKY
     }
